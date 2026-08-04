@@ -466,9 +466,10 @@
       </article>
       <article class="challenge reveal">
         <div class="challenge__bar"></div>
-        <h3>🧭 Estrutura semântica</h3>
+        <h3>🔍 Zoom acessível</h3>
         <p>
-          HTML com landmarks, headings hierárquicos e aria-labels para navegação assistiva.
+          Widget de zoom no canto inferior direito permite ampliar o site para
+          pessoas com baixa visão (80% a 160%).
         </p>
       </article>
     </div>
@@ -503,6 +504,22 @@
       </div>
     </div>
   </footer>
+
+  <!-- ============ WIDGET DE ACESSIBILIDADE (ZOOM) ============ -->
+  <div class="a11y-widget" role="group" aria-label="Acessibilidade: controle de zoom da interface">
+    <button class="a11y-btn" id="zoomOut" type="button" aria-label="Diminuir zoom" title="Diminuir zoom">−</button>
+
+    <button class="a11y-icon" id="zoomReset" type="button"
+            aria-label="Acessibilidade. Clique para restaurar o zoom padrão de 100 por cento"
+            title="Restaurar zoom padrão (100%)">
+      <span aria-hidden="true">♿</span>
+      <span class="a11y-value" id="zoomValue" aria-hidden="true">100%</span>
+    </button>
+
+    <button class="a11y-btn" id="zoomIn" type="button" aria-label="Aumentar zoom" title="Aumentar zoom">+</button>
+
+    <span class="sr-only" id="zoomAnnounce" aria-live="polite"></span>
+  </div>
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
