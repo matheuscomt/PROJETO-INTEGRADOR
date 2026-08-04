@@ -251,4 +251,131 @@ document.addEventListener('DOMContentLoaded', () => {
         ]
       },
       options: {
-        responsive:
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 1600, easing: 'easeOutQuart' },
+        plugins: {
+          legend: { labels: { usePointStyle: true, pointStyle: 'circle', padding: 18 } },
+          tooltip: { ...tooltipStyle, callbacks: { label: c => ` ${c.parsed.y} °C` } }
+        },
+        scales: {
+          y: { grid: { color: GRID }, ticks: { callback: v => v + ' °C' }, suggestedMin: 22, suggestedMax: 36 },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+  });
+
+  /* ---------- 2. Rosca: matriz energética ---------- */
+  lazyChart('chartEnergia', el => {
+    new Chart(el, {
+      type: 'doughnut',
+      data: {
+        labels: ['Energia solar térmica', 'Energia elétrica (apoio)', 'Perdas térmicas'],
+        datasets: [{
+          data: [70, 20, 10],
+          backgroundColor: [CYAN, SUN, 'rgba(56,189,248,0.25)'],
+          borderColor: '#0a1628',
+          borderWidth: 4,
+          hoverOffset: 14
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '62%',
+        animation: { animateRotate: true, duration: 1600 },
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { usePointStyle: true, pointStyle: 'circle', padding: 18, font: { size: 11 } }
+          },
+          tooltip: { ...tooltipStyle, callbacks: { label: c => ` ${c.parsed}%` } }
+        }
+      }
+    });
+  });
+
+  /* ---------- 3. Barras: economia ---------- */
+  lazyChart('chartEconomia', el => {
+    new Chart(el, {
+      type: 'bar',
+      data: {
+        labels: [
+          'Coletor solar térmico',
+          'Cobertura térmica noturna',
+          'Automação com sensores',
+          'Isolamento das tubulações'
+        ],
+        datasets: [{
+          label: '% de economia estimada',
+          data: [70, 40, 30, 15],
+          backgroundColor: CYAN,
+          borderRadius: 10,
+          barThickness: 26
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 1600, easing: 'easeOutQuart' },
+        plugins: {
+          legend: { display: false },
+          tooltip: { ...tooltipStyle, callbacks: { label: c => ` até ${c.parsed.x}% de economia` } }
+        },
+        scales: {
+          x: { grid: { color: GRID }, max: 80, ticks: { callback: v => v + '%' } },
+          y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+        }
+      }
+    });
+  });
+});
+
+/* ============================================================
+AQUA THERM — Widget de acessibilidade: zoom da interface
+Botões + / − e ícone ♿ (restaura 100%)
+============================================================ */
+(function () {
+  const MIN = 80, MAX = 160, STEP = 10;
+  let zoom = 100;
+
+  // Recupera o zoom salvo no navegador (se existir)
+  try {
+    const saved = parseInt(localStorage.getItem('aquatherm-zoom'), 10);
+    if (!isNaN(saved)) zoom = Math.min(MAX, Math.max(MIN, saved));
+  } catch (e) { /* armazenamento indisponível */ }
+
+  function applyZoom() {
+    // Escala o site inteiro (equivale ao zoom do navegador)
+    document.documentElement.style.zoom = zoom / 100;
+
+    try { localStorage.setItem('aquatherm-zoom', zoom); } catch (e) {}
+
+    const value = document.getElementById('zoomValue');
+    if (value) value.textContent = zoom + '%';
+
+    // Anuncia a mudança para leitores de tela
+    const announce = document.getElementById('zoomAnnounce');
+    if (announce) announce.textContent = 'Zoom da interface: ' + zoom + '%';
+
+    // Desabilita botões nos limites
+    const inBtn = document.getElementById('zoomIn');
+    const outBtn = document.getElementById('zoomOut');
+    if (inBtn) inBtn.disabled = zoom >= MAX;
+    if (outBtn) outBtn.disabled = zoom <= MIN;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const inBtn = document.getElementById('zoomIn');
+    const outBtn = document.getElementById('zoomOut');
+    const resetBtn = document.getElementById('zoomReset');
+
+    if (inBtn) inBtn.addEventListener('click', () => { zoom = Math.min(MAX, zoom + STEP); applyZoom(); });
+    if (outBtn) outBtn.addEventListener('click', () => { zoom = Math.max(MIN, zoom - STEP); applyZoom(); });
+    if (resetBtn) resetBtn.addEventListener('click', () => { zoom = 100; applyZoom(); });
+
+    applyZoom();
+  });
+})();
