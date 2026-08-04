@@ -6,7 +6,7 @@ Site desenvolvido para o **Projeto Integrador** do Centro de Educação Profissi
 
 Uma página única (one-page) com visual futurista em azul escuro, gráficos interativos, imagens SVG ilustrativas e efeitos visuais 3D.
 
-**by Matheus V. • 2026**
+**by Matheus V,Luisa A. Yasmin M. João P. Uriel H. • 2026**
 
 ---
 
